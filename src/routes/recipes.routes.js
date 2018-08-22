@@ -4,4 +4,6 @@ module.exports = (app) => {
   app.get('/', recipe.homePage);
 
   app.get('/favorites', recipe.findAll);
+
+  app.post('/favorites', recipe.create);
 }

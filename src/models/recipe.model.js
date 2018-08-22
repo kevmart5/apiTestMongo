@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 
 const FavoritesSchema = mongoose.Schema({
-  name: String,
-  category: String
+  label: String,
+  image: String,
+  calories: Number,
+  ingredients: []
 
 },  {
   timestamps: true
