@@ -7,5 +7,7 @@ module.exports = (app) => {
 
   app.get('/users/:userId', user.findById);
 
-  app.post('/users', user.create);
+  app.post('/signUp', user.create);
+
+  app.post('/login', user.userLogin);
 }

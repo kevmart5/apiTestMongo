@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("../models/user.model.js");
-var bcrypt = require('bcrypt');
+let bcrypt = require('bcrypt');
+let jwt = require('jsonwebtoken');
 
 exports.findAll = (req, res) => {
   User.find()
@@ -26,6 +27,28 @@ exports.findById = (req, res) => {
     });
 };
 
+exports.userLogin = (req, res) => {
+  User.findOne({email: req.body.email})
+  .then((data) => {
+    if(bcrypt.compareSync(req.body.password, data.password)) {
+      const userData = {
+        name: data.name,
+        email: data.email,
+        lastName: data.lastName,
+        token: ''
+      }
+      let token = jwt.sign(userData, 'costarica');
+      userData.token = token;
+      res.send(userData);
+     } else {
+      throw new Error('Login fail');
+     }
+    
+  }).catch(function(error) {
+    res.send(`There's nobody registered with this email: ${req.body.email}`);
+  });
+}
+
 exports.create = (req, res) => {
   const saltRounds = 10;
   if (Object.keys(req.body).length === 0) {
@@ -33,15 +56,21 @@ exports.create = (req, res) => {
       message: "User content can not be empty"
     });
   } else {
-    
     const newUser = new User(req.body);
-    
     bcrypt.hash(newUser.password, saltRounds, function(err, hash) {
       newUser.password = hash;
       newUser
       .save()
       .then(data => {
-        res.send(data);
+        const userData = {
+          name: data.name,
+          lastName: data.lastName,
+          email: data.email,
+          token: ''
+        }
+        let token = jwt.sign(userData, 'costarica');
+        userData.token = token;
+        res.send(userData);
       })
       .catch(err => {
         res.status(500).send({
@@ -55,3 +84,4 @@ exports.create = (req, res) => {
 exports.homePage = (req, res) => {
   res.send("Im here");
 };
+
