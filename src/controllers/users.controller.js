@@ -32,6 +32,7 @@ exports.userLogin = (req, res) => {
   .then((data) => {
     if(bcrypt.compareSync(req.body.password, data.password)) {
       const userData = {
+        id: data._id,
         name: data.name,
         email: data.email,
         lastName: data.lastName,
