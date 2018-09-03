@@ -8,7 +8,9 @@ const ParkingSpaceSchema = mongoose.Schema({
     type: Schema.ObjectId,
     ref: 'User'
   }, 
-  available: Boolean
+  available: Boolean,
+  initialDate: Date,
+  finalDate: Date
 },  {
   timestamps: true
 })
