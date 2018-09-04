@@ -28,7 +28,6 @@ exports.findOne = (req, res) => {
 }
 
 exports.findUserSpace = (req, res) => {
-  console.log(req.params.id)
   Spaces.findOne({owner: ObjectId(req.params.id)})
   .then(space => {
     res.send(space);
@@ -38,4 +37,17 @@ exports.findUserSpace = (req, res) => {
       message: err.message
     });
   });
+}
+
+exports.updateSpaceInformation = async (req, res) => {
+  console.log(req.body)
+  Spaces.findOneAndUpdate({_id: req.body._id}, req.body)
+  .then(space => {
+    res.status(200).send(space);
+  }).catch(err => {
+    res.status(500).send({
+      message: err.message
+    });
+  })
+  
 }

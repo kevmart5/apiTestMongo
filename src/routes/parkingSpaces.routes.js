@@ -5,5 +5,7 @@ module.exports = (app) => {
   
   app.get('/spaces/:code', spaces.findOne);
 
-app.get('/spaces/user/:id', spaces.findUserSpace);
+  app.get('/spaces/user/:id', spaces.findUserSpace);
+
+  app.put('/spaces', spaces.updateSpaceInformation);
 }
