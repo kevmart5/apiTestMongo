@@ -36,7 +36,8 @@ exports.userLogin = (req, res) => {
         name: data.name,
         email: data.email,
         lastName: data.lastName,
-        token: ''
+        token: '',
+        admin: data.admin
       }
       let token = jwt.sign(userData, 'costarica');
       userData.token = token;
@@ -67,7 +68,8 @@ exports.create = (req, res) => {
           name: data.name,
           lastName: data.lastName,
           email: data.email,
-          token: ''
+          token: '',
+          admin: data.admin
         }
         let token = jwt.sign(userData, 'costarica');
         userData.token = token;
@@ -81,6 +83,18 @@ exports.create = (req, res) => {
     });
   }
 };
+
+exports.updateUserInformation = (req, res) => {
+  console.log(req.body);
+  User.findOneAndUpdate({_id: req.body._id}, req.body)
+  .then(usr => {
+    res.status(200).send(usr);
+  }).catch(err => {
+    res.status(500).send({
+      message: err.message
+    });
+  })
+}
 
 exports.homePage = (req, res) => {
   res.send("Im here");

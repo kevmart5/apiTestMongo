@@ -3,6 +3,11 @@ const Spaces = require("../models/parkingSpaces.model");
 const User = require('../models/user.model');
 const ObjectId = require('mongodb').ObjectID;
 
+exports.createSpace = (req, res) => {
+  res.send('Create space');
+}
+
+
 exports.findAll = (req, res) => {
   Spaces.find()
     .then(spaces => {

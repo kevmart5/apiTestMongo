@@ -5,6 +5,8 @@ module.exports = (app) => {
 
   app.get('/users', user.findAll);
 
+  app.put('/users', user.updateUserInformation);
+
   app.get('/users/:userId', user.findById);
 
   app.post('/signUp', user.create);
