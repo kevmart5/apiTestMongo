@@ -100,3 +100,27 @@ exports.homePage = (req, res) => {
   res.send("Im here");
 };
 
+exports.updateSpace = (req, res) => {
+  const initialDateParam = new Date(req.body.initialDate);
+  const finalDateParam = new Date(req.body.finalDate);
+  const space = {
+    available: req.body.available,
+    code: req.body.code,
+    initialDate: initialDateParam,
+    finalDate: finalDateParam
+  }
+
+  User.findById(req.body.userId._id)
+  .then(usr => {
+    usr.space = space;
+    usr.save()
+    console.log(usr);
+    res.status(200).send(usr);
+  }).catch(err => {
+    console.log(err.message);
+    res.status(500).send({
+      message: err.message
+    });
+  })
+}
+
