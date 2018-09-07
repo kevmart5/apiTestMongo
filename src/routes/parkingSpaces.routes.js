@@ -10,4 +10,6 @@ module.exports = (app) => {
   app.get('/spaces/user/:id', spaces.findUserSpace);
 
   app.put('/spaces', spaces.updateSpaceInformation);
+
+  app.put('/spaces/reserve', spaces.reserveSpace);
 }

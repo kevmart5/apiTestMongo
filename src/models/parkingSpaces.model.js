@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const User = require('./user.model');
 
 const ParkingSpaceSchema = mongoose.Schema({
   code: String,
   available: Boolean,
   initialDate: Date,
-  finalDate: Date
+  finalDate: Date,
+  reserve: {
+    type: User
+  }
 },  {
   timestamps: true
 })

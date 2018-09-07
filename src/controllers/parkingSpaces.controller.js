@@ -54,5 +54,33 @@ exports.updateSpaceInformation = async (req, res) => {
       message: err.message
     });
   })
-  
+}
+
+exports.reserveSpace = (req, res) => {
+  console.log(req.body.space._id);
+
+  Spaces.findOne({_id: req.body.space._id})
+  .then(spaceFound => {
+    spaceFound.reserve = req.body.user;
+    spaceFound.available = !spaceFound.available;
+    spaceFound.save();
+    User.findOne({'space._id': spaceFound._id})
+    .then(userSpace => {
+      userSpace.space.available = !userSpace.space.available;
+      userSpace.save();
+      res.status(200).send(spaceFound);
+    }).catch(err => {
+      res.status(400).send({
+        message: err.message
+      });
+    })
+    //res.status(200).send(spaceFound);
+  })
+  .catch(err => {
+    res.status(400).send({
+      message: err.message
+    });
+  })
+
+
 }
