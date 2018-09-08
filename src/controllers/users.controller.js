@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("../models/user.model.js");
+const Spaces = require('../models/parkingSpaces.model');
 let bcrypt = require('bcrypt');
 let jwt = require('jsonwebtoken');
 
@@ -85,10 +86,20 @@ exports.create = (req, res) => {
 };
 
 exports.updateUserInformation = (req, res) => {
-  console.log(req.body);
   User.findOneAndUpdate({_id: req.body._id}, req.body)
   .then(usr => {
-    res.status(200).send(usr);
+    Spaces.findOne({_id: req.body.space._id})
+    .then(space => {
+      space.available = !space.available
+      space.save();
+      res.status(200).send(usr);
+    })
+    .catch(err => {
+      console.log(err.message);
+      res.status(400).send({
+        message: err.message
+      });
+    })
   }).catch(err => {
     res.status(500).send({
       message: err.message
@@ -114,7 +125,6 @@ exports.updateSpace = (req, res) => {
   .then(usr => {
     usr.space = space;
     usr.save()
-    console.log(usr);
     res.status(200).send(usr);
   }).catch(err => {
     console.log(err.message);
