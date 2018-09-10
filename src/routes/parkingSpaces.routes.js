@@ -12,4 +12,8 @@ module.exports = (app) => {
   app.put('/spaces', spaces.updateSpaceInformation);
 
   app.put('/spaces/reserve', spaces.reserveSpace);
+
+  app.get('/spaces/reserve/:id', spaces.findSpaceReserveUser);
+
+  app.put('/spaces/release-space', spaces.releaseParkingSpace);
 }

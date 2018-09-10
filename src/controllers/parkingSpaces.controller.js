@@ -32,6 +32,26 @@ exports.findOne = (req, res) => {
   });
 }
 
+exports.findSpaceReserveUser = (req, res) =>{
+  Spaces.find() 
+  .then(spaces => {
+    const spacesReserved = spaces.filter(s => {
+      if(s.reserve !== undefined){
+        return s;
+      }
+    })
+    const spaceFound = spacesReserved.filter(space => {
+      return space.reserve.id === req.params.id;
+    })
+    res.status(200).send(spaceFound[0]);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: err.message
+    });
+  })
+}
+
 exports.findUserSpace = (req, res) => {
   Spaces.findOne({owner: ObjectId(req.params.id)})
   .then(space => {
@@ -45,7 +65,6 @@ exports.findUserSpace = (req, res) => {
 }
 
 exports.updateSpaceInformation = async (req, res) => {
-  console.log(req.body)
   Spaces.findOneAndUpdate({_id: req.body._id}, req.body)
   .then(space => {
     res.status(200).send(space);
@@ -57,14 +76,12 @@ exports.updateSpaceInformation = async (req, res) => {
 }
 
 exports.reserveSpace = (req, res) => {
-  console.log(req.body.space._id);
-
-  Spaces.findOne({_id: req.body.space._id})
+  Spaces.findOne({code: req.body.space.code})
   .then(spaceFound => {
     spaceFound.reserve = req.body.user;
     spaceFound.available = !spaceFound.available;
     spaceFound.save();
-    User.findOne({'space._id': spaceFound._id})
+    User.findOne({'space._id': req.body.space._id})
     .then(userSpace => {
       userSpace.space.available = !userSpace.space.available;
       userSpace.save();
@@ -74,13 +91,40 @@ exports.reserveSpace = (req, res) => {
         message: err.message
       });
     })
-    //res.status(200).send(spaceFound);
   })
   .catch(err => {
     res.status(400).send({
       message: err.message
     });
   })
+}
 
-
+exports.releaseParkingSpace = (req, res) => {
+  Spaces.findOne({code: req.body.code})
+  .then(space => {
+    space.reserve = undefined;
+    space.available = !space.available;
+    space.save()
+    User.find() 
+    .then(users => {
+      const userFound = users.filter(u => {
+        if(u.space !== undefined){
+          return u.space.code === req.body.code
+        }
+      })
+      userFound[0].space.available = !userFound[0].space.available;
+      userFound[0].save();
+      res.status(200).send(space);
+    })
+    .catch(err => {
+      res.status(400).send({
+        message: err.message
+      });
+    })
+    
+  }).catch(err => {
+    res.status(400).send({
+      message: err.message
+    });
+  })
 }

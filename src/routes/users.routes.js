@@ -14,4 +14,6 @@ module.exports = (app) => {
   app.post('/signUp', user.create);
 
   app.post('/login', user.userLogin);
+
+  app.put('/users/retake-space', user.retakeParkingSpace);
 }

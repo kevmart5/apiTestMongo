@@ -134,3 +134,17 @@ exports.updateSpace = (req, res) => {
   })
 }
 
+exports.retakeParkingSpace = (req, res) => {
+  User.findOne({_id: req.body.id})
+  .then(user => {
+    user.space.available = !user.space.available
+    user.save();
+    res.status(200).send(user);
+  })
+  .catch(err => {
+    res.status(400).send({
+      message: err.message
+    });
+  })
+}
+ 
